@@ -24,3 +24,39 @@ class Ingredient:
         if not isinstance(other, Ingredient):
             return NotImplemented
         return self.name==other.name and self.unit==other.unit
+    
+
+class Recipe:
+    def __init__(self, title: str, ingredients: list=None):
+        self.title = title
+        self.ingredients = ingredients.copy() if ingredients else []
+    
+    def add_ingredient(self, ingredient: Ingredient):
+        for e in self.ingredients:
+            if e == ingredient:
+                e.quantity += ingredient.quantity
+                return
+        self.ingredients.append(ingredient)
+    
+    @staticmethod
+    def is_valid_ratio(ratio) -> bool:
+        try:
+            return float(ratio)> 0
+        except (TypeError, ValueError):
+            return False
+    
+    def scale(self, ratio: float) -> 'Recipe':
+        if not self.is_valid_ratio(ratio):
+            raise ValueError(f"Коэффициент масштабирования должен быть положительным числом, получено: {ratio}")
+        ratio = float(ratio)
+        list =[]
+        for ing in self.ingredients:
+            list.append(Ingredient(ing.name, ing.quantity * ratio, ing.unit))
+        return Recipe(self.title, list)
+    
+    def __len__(self) -> int:
+        return len(self.ingredients)
+    
+    def __str__(self) -> str:
+        str = "\n".join(f"  - {ing}" for ing in self.ingredients)
+        return f"{self.title}:\n{str}"
