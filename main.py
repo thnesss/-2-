@@ -82,7 +82,7 @@ class ShoppingList:
             if key in sum:
                 sum[key] += i.quantity
             else:
-                sum[key] = i.quantity
+                sum[key] = i .quantity
         result = [Ingredient(name, quantity, unit) for (name, unit), quantity in sum.items()]
         result.sort(key=lambda x: x.name)
         return result
@@ -91,3 +91,16 @@ class ShoppingList:
         new_list = ShoppingList()
         new_list._items = self._items.copy() + other._items.copy()
         return new_list
+    
+
+class DietaryRecipe(Recipe):
+    def __init__(self, title: str, diet_type: str, ingredients: list = None):
+        super().__init__(title, ingredients)
+        self.diet_type = diet_type
+    
+    def scale(self, ratio: float):
+        nrecipe=super().scale(ratio)
+        return DietaryRecipe(nrecipe.title, self.diet_type,nrecipe.ingredients)
+    
+    def __str__(self) -> str:
+        return f"[{self.diet_type}] {self.title}:\n"+"\n".join(f"  - {ing}" for ing in self.ingredients)
