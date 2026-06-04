@@ -11,7 +11,7 @@
 
 ```bash
 git clone https://github.com/thnesss/-2-
-cd HW2
+cd -2-
 pip install -r requirements.txt
 pytest
 ```
