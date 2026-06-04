@@ -1,5 +1,5 @@
 import pytest
-from main import Ingredient
+from main import Ingredient, Recipe
 
 def test_ing1():
     ing= Ingredient("Мука", 500.0, "г")
@@ -27,3 +27,54 @@ def test_ing5():
     ing1 = Ingredient("Мука", 500.0, "г")
     ing2 = Ingredient("Мука", 500.0, "кг")
     assert ing1 != ing2
+
+def test_recipe1():
+    ing= [Ingredient("Мука", 500, "г"), Ingredient("Яйца", 3, "шт")]
+    rec = Recipe("Блины", ing)
+    assert rec.title == "Блины"
+    assert len(rec.ingredients)== 2
+    assert rec.ingredients[0].name== "Мука"
+    assert rec.ingredients[1].name == "Яйца"
+
+def test_recipe2():
+    rec= Recipe("Блины", [])
+    ing= Ingredient("Мука", 500, "г")
+    rec.add_ingredient(ing)
+    assert len(rec.ingredients)== 1
+    assert rec.ingredients[0].quantity == 500
+
+def test_recipe3():
+    rec= Recipe("Блины", [Ingredient("Мука", 500, "г")])
+    ing= Ingredient("Мука",300, "г")
+    rec.add_ingredient(ing)
+    assert len(rec.ingredients) == 1
+    assert rec.ingredients[0].quantity == 800
+
+def test_recipe4():
+    rec= Recipe("Блины", [Ingredient("Мука", 500, "г")])
+    sc= rec.scale(2)
+    assert sc is not rec
+    assert rec.ingredients[0].quantity== 500
+    assert sc.ingredients[0].quantity == 1000
+
+def test_recipe5():
+    rec= Recipe("Блины", [
+        Ingredient("Мука", 500, "г"),
+        Ingredient("Яйца", 3, "шт")
+    ])
+    sc= rec.scale(2.5)
+    assert sc.ingredients[0].quantity== 1250
+    assert sc.ingredients[1].quantity == 7.5
+
+def test_recipe6():
+    rec= Recipe("Блины", [Ingredient("Мука",500,"г")])
+    with pytest.raises(ValueError):
+        rec.scale(-5)
+
+def test_recipe7():
+    rec= Recipe("Блины", [
+        Ingredient("Мука", 500, "г"),
+        Ingredient("Яйца", 3, "шт"),
+        Ingredient("Молоко",250,"мл")
+    ])
+    assert len(rec)== 3
